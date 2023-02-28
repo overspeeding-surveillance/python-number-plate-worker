@@ -39,6 +39,9 @@ def main():
             ymax = int(readable_result['ymax'][i])
             filename = str(uuid.uuid4()) + ".jpg"
             capture_plate(img, xmin, ymin, xmax, ymax, filename)
+            channel.basic_publish(
+                exchange='', routing_key=THIRD_PYTHON_QUEUE, body=filename)
+            print(" [x] Sent " + filename)
 
     channel.basic_consume(
         queue=SECOND_PYTHON_QUEUE, on_message_callback=callback, auto_ack=True)
